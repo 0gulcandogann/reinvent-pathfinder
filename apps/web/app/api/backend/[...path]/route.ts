@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 const ALLOWED = new Set([
   "demo/state", "demo/reset", "agent/message", "sessions/recommend",
   "auth/builder-id/status", "auth/builder-id/start",
+  "auth/builder-id/recheck", "live/bootstrap", "live/sessions/recommend", "live/agent/message",
 ]);
 
 async function forward(request: NextRequest, path: string[]): Promise<NextResponse> {
@@ -10,8 +11,8 @@ async function forward(request: NextRequest, path: string[]): Promise<NextRespon
   if (!ALLOWED.has(route)) return NextResponse.json({ detail: "Unsupported route" }, { status: 404 });
   if (request.method === "GET" && !["demo/state", "auth/builder-id/status"].includes(route)) return NextResponse.json({ detail: "Method not allowed" }, { status: 405 });
   if (request.method === "POST" && ["demo/state", "auth/builder-id/status"].includes(route)) return NextResponse.json({ detail: "Method not allowed" }, { status: 405 });
-  if (route.startsWith("auth/") && !["localhost", "127.0.0.1", "::1"].includes(request.nextUrl.hostname)) return NextResponse.json({ detail: "Local sign-in is unavailable" }, { status: 403 });
-  if (route === "auth/builder-id/start") {
+  if ((route.startsWith("auth/") || route.startsWith("live/")) && !["localhost", "127.0.0.1", "::1"].includes(request.nextUrl.hostname)) return NextResponse.json({ detail: "Local attendee access is unavailable" }, { status: 403 });
+  if (route === "auth/builder-id/start" || route === "auth/builder-id/recheck" || route.startsWith("live/")) {
     const origin = request.headers.get("origin");
     if (origin) {
       try {

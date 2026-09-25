@@ -3,6 +3,7 @@ import test from "node:test";
 import { EMPTY_PROFILE, levelsForDepth, profileForRequest, toggleValue } from "../lib/profile.ts";
 import { agentErrorMessage, builderIdLabel, builderIdNotice, coverageTopic, mutationCanConfirm, mutationOutcome, provenanceLabel, safeErrorMessage } from "../lib/view.ts";
 import { daysOfWeek, explanationEvidence, scheduleDayEntries } from "../lib/schedule-view.ts";
+import { canEnterLive, canExecuteDemoMutation, showDemoControls, showLiveAuthControl, themeForMode } from "../lib/mode.ts";
 import type { AgentResponse, IntegratedSchedule, MutationExecutionResult, ScheduleMutationPlan, SessionExplanation } from "../lib/types.ts";
 
 test("onboarding depth and profile serialization use the backend profile fields", () => {
@@ -41,6 +42,30 @@ test("Builder ID labels distinguish demo-era access from live attendee access", 
   assert.equal(builderIdLabel("registration_required"), "Builder ID connected · re:Invent registration required");
   assert.equal(builderIdLabel("live_aws"), "Live AWS");
   assert.match(safeErrorMessage("auth"), /Builder ID sign-in/);
+});
+
+test("Live setup uses dark theme without granting attendee data access", () => {
+  assert.equal(themeForMode("demo"), "demo");
+  assert.equal(themeForMode("demo", true), "live");
+  assert.equal(themeForMode("demo", false), "demo");
+  assert.equal(themeForMode("live"), "live");
+  assert.equal(canEnterLive("not_connected", false), false);
+  assert.equal(canEnterLive("connecting", false), false);
+  assert.equal(canEnterLive("registration_required", false), false);
+  assert.equal(canEnterLive("live_aws", false), false);
+  assert.equal(canEnterLive("live_aws", true), true);
+  assert.equal(canExecuteDemoMutation("demo", true), true);
+  assert.equal(canExecuteDemoMutation("live", true), false);
+  assert.equal(canExecuteDemoMutation("demo", false), false);
+});
+
+test("Demo hides AWS sign-in; Live setup hides fixture controls", () => {
+  assert.equal(showDemoControls("demo", false), true);
+  assert.equal(showLiveAuthControl("demo", false), false);
+  assert.equal(showDemoControls("demo", true), false);
+  assert.equal(showLiveAuthControl("demo", true), true);
+  assert.equal(showDemoControls("live", false), false);
+  assert.equal(showLiveAuthControl("live", false), true);
 });
 
 test("Builder ID outcomes explain sign-in and registration without raw transport detail", () => {

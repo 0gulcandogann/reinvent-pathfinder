@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { api, ApiError } from "../lib/api";
-import type { AttendeeProfile, SearchResults } from "../lib/types";
+import type { AttendeeProfile, PathfinderMode, SearchResults } from "../lib/types";
 import { levelCode, safeErrorMessage, sessionCode } from "../lib/view";
 import { SERVICE_OPTIONS } from "../lib/profile";
 import { Icon } from "./Icon";
@@ -10,7 +10,7 @@ import { Icon } from "./Icon";
 const TOPICS = ["Security", "Serverless", "Observability", "Containers"];
 const TYPES = ["Breakout session", "Workshop", "Chalk talk"];
 
-export function DiscoverPanel({ profile }: { profile: AttendeeProfile }) {
+export function DiscoverPanel({ profile, mode }: { profile: AttendeeProfile; mode: PathfinderMode }) {
   const [query, setQuery] = useState("");
   const [level, setLevel] = useState("");
   const [service, setService] = useState("");
@@ -28,14 +28,14 @@ export function DiscoverPanel({ profile }: { profile: AttendeeProfile }) {
         const data = await api.recommend(query, profile, {
           levels: level ? [level] : [], services: service ? [service] : [],
           topics: topic ? [topic] : [], session_types: type ? [type] : [], tracks: [],
-        });
+        }, mode);
         if (!cancelled) { setResults(data); setError(""); }
       } catch (reason) {
         if (!cancelled) setError(safeErrorMessage(reason instanceof ApiError ? reason.kind : "network"));
       } finally { if (!cancelled) setLoading(false); }
     }, 220);
     return () => { cancelled = true; clearTimeout(timer); };
-  }, [query, level, service, topic, type, profile]);
+  }, [query, level, service, topic, type, profile, mode]);
 
   return <div className="grid gap-7 lg:grid-cols-[245px_minmax(0,1fr)]">
     <aside className="h-fit border-t border-line pt-4">

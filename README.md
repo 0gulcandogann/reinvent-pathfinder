@@ -2,7 +2,7 @@
 
 > Most conference tools help you find sessions. Pathfinder optimizes your entire re:Invent experience.
 
-![Pathfinder optimized weekly plan using offline demo data](docs/assets/pathfinder-plan.png)
+![Pathfinder's light Demo view with an optimized weekly plan and the Demo/Live switch](docs/assets/pathfinder-demo-plan.png)
 
 re:Invent has thousands of possible sessions. Choosing individually relevant
 sessions is easy; building a coherent week is harder. Pathfinder treats
@@ -26,8 +26,8 @@ and fake clients.
 the real AWS Events service. Authentication completed successfully, but
 attendee-bound access currently returns the documented registration-required
 response because the test Builder ID is not registered for re:Invent 2026.
-Pathfinder therefore remains in offline/demo mode and does not claim live
-attendee access. Live mutations remain disabled.
+This test account therefore cannot enter Live data mode; the Demo remains
+available. Live mutations remain disabled.
 
 Pathfinder deliberately separates authentication from attendee authorization.
 A successful Builder ID sign-in is not enough to enter **Live AWS** mode; an
@@ -75,23 +75,44 @@ session with something more advanced about containers**. Review the proposed
 changes and click **Confirm demo changes** to see the fake operation result
 and verified schedule. **Reset demo** restores the fixture reservations,
 profile shortcut, and pending-plan state.
+
+The top-right **Demo | Live** control selects the access flow and theme.
+**Demo** is the default: fixture-backed, light Pathfinder theme, and no AWS
+credentials required. Demo hides AWS sign-in controls. Selecting **Live** opens
+a separate access setup view with the Builder ID control; fixture content is
+hidden during this step, and the setup view uses the dark theme:
+
+![Dark Live access setup view with AWS Builder ID sign-in and attendee access steps](docs/assets/pathfinder-live-access.png)
+
+Actual Live data mode begins only after Builder ID sign-in, a successful attendee-bound
+`GetSchedule` read, and a complete live catalog load into a separate local
+SQLite database. A Builder ID that is not registered for re:Invent 2026 stays
+out of Live data mode with a clear notice. Completing a mode switch clears
+pending mutation plans. Live Assistant and Discover use the separate live
+catalog; live schedule writes remain disabled. Selecting
+Live never changes `AWS_EVENTS_ENABLE_WRITES=false`.
+
 With both servers running, `python scripts/smoke_ui.py` checks the complete
 offline HTTP flow through Next.js and FastAPI, including reset.
 
 The purple **Demo data** label identifies fixture state. The demo endpoints
 are unavailable unless `PATHFINDER_DEMO_MODE=true`; they use
-`data/demo_catalog.sqlite3` unless `PATHFINDER_CATALOG_DB` is set. The UI
-does not use live AWS for planning. The HTTP API has no attendee authentication, so the
-local `conversation_id` is not an authorization mechanism. Live writes remain
+`data/demo_catalog.sqlite3` unless `PATHFINDER_CATALOG_DB` is set. Demo planning
+does not use live AWS. The optional local Live bridge stores a completed live
+catalog in the separate ignored `data/live_catalog.sqlite3` file. The HTTP API
+has no attendee authentication, so the local `conversation_id` is not an
+authorization mechanism. Live writes remain
 disabled by default and must not be enabled on an exposed deployment.
 
-The compact **Sign in with AWS Builder ID** control uses the existing local
-OAuth/PKCE helper. Clicking it opens AWS sign-in in the attendee's browser, keeps
-the access token only in that API process, and performs a read-only
+The compact **Sign in with AWS Builder ID** control appears after selecting
+Live and uses the existing local OAuth/PKCE helper. Clicking it opens AWS
+sign-in in the attendee's browser, keeps the access token only in that API
+process, and performs a read-only
 `GetSchedule` access check. The status can show that Builder ID is connected
-while re:Invent registration is still required. **Demo data** continues to
-identify fixture content even after sign-in. This local control is restricted
-to loopback access; it does not make the UI an attendee-authenticated deployment
+while re:Invent registration is still required. Returning to Demo after sign-in
+shows **Demo data** again; sign-in alone never changes the data source. This
+local control is restricted to loopback access; it does not make the UI an
+attendee-authenticated deployment
 or enable AWS schedule writes.
 If the browser blocks the new tab, use **Open sign-in page** in the top bar.
 Enter Builder ID credentials only on the AWS sign-in page; Pathfinder never

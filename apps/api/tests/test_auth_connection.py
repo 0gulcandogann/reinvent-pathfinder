@@ -70,6 +70,38 @@ def test_builder_id_connection_marks_read_access_and_rejects_duplicate_start() -
     asyncio.run(scenario())
 
 
+def test_explicit_recheck_can_confirm_registration_without_second_oauth() -> None:
+    logins = 0
+    reads = 0
+
+    async def login(_open_browser) -> str:
+        nonlocal logins
+        logins += 1
+        return "private-access-token"
+
+    async def check(_token: str) -> None:
+        nonlocal reads
+        reads += 1
+        if reads == 1:
+            raise EventsApiError(
+                "AWS Events returned HTTP 403: attendee is not registered",
+                status_code=403,
+            )
+
+    async def scenario() -> None:
+        connection = BuilderIdConnection(login=login, check_access=check)
+        await connection.start()
+        await connection._task
+        assert connection.status().state == "registration_required"
+        assert (await connection.recheck()).state == "live_aws"
+        assert connection.live_access_token() == "private-access-token"
+        assert logins == 1
+        assert reads == 2
+        assert "private-access-token" not in connection.status().model_dump_json()
+
+    asyncio.run(scenario())
+
+
 def test_registered_attendee_requires_normalized_get_schedule_before_live(
     monkeypatch,
 ) -> None:

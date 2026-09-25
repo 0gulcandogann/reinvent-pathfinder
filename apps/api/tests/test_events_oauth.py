@@ -187,6 +187,10 @@ def test_browser_login_uses_loopback_callback_and_posts_code_without_client_secr
     assert asyncio.run(login()) == "private-access"
     assert len(browser_urls) == 1
     assert browser_responses[0].startswith(b"HTTP/1.1 200 OK")
+    assert b"Content-Type: text/html; charset=utf-8" in browser_responses[0]
+    assert b"<title>Pathfinder | Authorization received</title>" in browser_responses[0]
+    assert b"Return to Pathfinder" in browser_responses[0]
+    assert b"private-code" not in browser_responses[0]
     assert requests[0].url == TOKEN_ENDPOINT
     assert requests[0].method == "POST"
     form = parse_qs(requests[0].content.decode("ascii"))
@@ -210,6 +214,7 @@ def test_browser_login_uses_loopback_callback_and_posts_code_without_client_secr
 
 def test_loopback_callback_rejects_wrong_state_without_exchanging_code() -> None:
     token_calls = 0
+    browser_responses: list[bytes] = []
 
     async def send_wrong_state(redirect_uri: str) -> None:
         parsed = urlsplit(redirect_uri)
@@ -219,7 +224,7 @@ def test_loopback_callback_rejects_wrong_state_without_exchanging_code() -> None
             b"Host: 127.0.0.1\r\n\r\n"
         )
         await writer.drain()
-        await reader.read()
+        browser_responses.append(await reader.read())
         writer.close()
         await writer.wait_closed()
 
@@ -247,3 +252,8 @@ def test_loopback_callback_rejects_wrong_state_without_exchanging_code() -> None
     with pytest.raises(OAuthLoginError, match="state did not match"):
         asyncio.run(login())
     assert token_calls == 0
+    assert browser_responses[0].startswith(b"HTTP/1.1 400 Bad Request")
+    assert (
+        b"<title>Pathfinder | Sign-in could not finish</title>" in browser_responses[0]
+    )
+    assert b"private-code" not in browser_responses[0]

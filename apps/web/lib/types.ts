@@ -178,3 +178,5 @@ export type BuilderIdState = "not_connected" | "connecting" | "registration_requ
 export type AttendeeAccessFailure = "authentication_failed" | "authorization_denied" | "transport_failure" | "malformed_response" | "unknown_failure";
 export type BuilderIdStatus = { state: BuilderIdState; failure_reason?: AttendeeAccessFailure | null };
 export type BuilderIdStart = BuilderIdStatus & { authorization_url?: string | null };
+export type PathfinderMode = "demo" | "live";
+export type LiveBootstrap = { mode: "live_aws"; existing_schedule: AttendeeSchedule; catalog_sessions: number };

@@ -67,6 +67,18 @@ class BuilderIdConnection:
     def status(self) -> BuilderIdStatus:
         return BuilderIdStatus(state=self._state, failure_reason=self._failure_reason)
 
+    def live_access_token(self) -> str | None:
+        """Expose the in-memory token only to the local read-only live bridge."""
+        return self._access_token if self._state == "live_aws" else None
+
+    async def recheck(self) -> BuilderIdStatus:
+        """Retry an attendee read only after an explicit local user action."""
+        if self._access_token is None:
+            return self.status()
+        self._state = "connecting"
+        await self._validate_token(self._access_token)
+        return self.status()
+
     async def start(self) -> BuilderIdStart:
         if self._state in {"connecting", "registration_required", "live_aws"}:
             return BuilderIdStart(
@@ -110,6 +122,10 @@ class BuilderIdConnection:
                 url_ready.set_result(None)
             self._authorization_url = None
         self._access_token = token
+        await self._validate_token(token)
+
+    async def _validate_token(self, token: str) -> None:
+        self._failure_reason = None
         try:
             await self._check_access(token)
         except EventsApiError as error:

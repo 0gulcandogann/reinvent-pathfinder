@@ -9,9 +9,11 @@ result states are the six Builder Center screenshot opportunities. The
 `python scripts/smoke_ui.py` exercises the same offline HTTP flow with both
 servers running.
 
-The [curated Plan image](assets/pathfinder-plan.png) shows the fixture-backed
-product UI. Run the local demo to inspect the explanation, insights, assistant,
-mutation proposal, and verified result states.
+The [Demo Plan image](assets/pathfinder-demo-plan.png) shows the fixture-backed
+product UI and mode switch. The [Live access image](assets/pathfinder-live-access.png)
+shows the sign-in gate before attendee data is available. Run the local demo to
+inspect the explanation, insights, assistant, mutation proposal, and verified
+result states.
 
 | Command | Shows |
 | --- | --- |

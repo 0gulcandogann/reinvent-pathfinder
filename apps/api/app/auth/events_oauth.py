@@ -18,6 +18,67 @@ SCOPES = "openid email events/access"
 CALLBACK_PORTS = range(8484, 8490)
 
 
+def _callback_page(*, success: bool) -> bytes:
+    """Render a static, secret-free finish screen for the loopback callback."""
+    if success:
+        title = "Authorization received"
+        detail = (
+            "AWS Builder ID returned you to Pathfinder. Sign-in and re:Invent "
+            "attendee access are being checked now."
+        )
+        status = "AUTHORIZATION RECEIVED"
+        browser_title = "Pathfinder | Authorization received"
+    else:
+        title = "Sign-in could not finish"
+        detail = (
+            "Pathfinder could not verify this sign-in callback. Return to the "
+            "app and start a new sign-in."
+        )
+        status = "CALLBACK NOT VERIFIED"
+        browser_title = "Pathfinder | Sign-in could not finish"
+    return f"""<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{browser_title}</title>
+  <style>
+    :root {{ color-scheme: dark;
+      font-family: Inter, ui-sans-serif, system-ui, sans-serif; }}
+    * {{ box-sizing: border-box; }}
+    body {{ margin: 0; min-height: 100vh; display: grid; place-items: center;
+      background: #08070a; color: #f7f5f8; }}
+    main {{ width: min(100% - 40px, 480px); }}
+    .brand {{ margin-bottom: 56px; font-size: 15px; font-weight: 700;
+      letter-spacing: -.02em; }}
+    .eyebrow {{ color: #c7a1fa; font-size: 11px; font-weight: 700;
+      letter-spacing: .15em; }}
+    h1 {{ font-size: clamp(30px, 6vw, 42px); line-height: 1.12;
+      letter-spacing: -.045em; margin: 18px 0 16px; }}
+    p {{ color: #c7c0cc; line-height: 1.65; margin: 0; font-size: 15px; }}
+    .rule {{ border-top: 1px solid #393046; margin: 32px 0; }}
+    a {{ display: inline-flex; align-items: center; min-height: 42px; padding: 0 16px;
+      border-radius: 7px; background: #c7a1fa; color: #130e19; font-size: 13px;
+      font-weight: 700; text-decoration: none; }}
+    a:hover {{ background: #d9bfff; }}
+    a:focus-visible {{ outline: 2px solid #f7f5f8; outline-offset: 3px; }}
+    .hint {{ margin-top: 18px; color: #a39baa; font-size: 12px; }}
+  </style>
+</head>
+<body>
+  <main>
+    <div class="brand">Pathfinder</div>
+    <div class="eyebrow">BUILDER ID / {status}</div>
+    <h1>{title}</h1>
+    <p>{detail}</p>
+    <div class="rule"></div>
+    <a href="http://127.0.0.1:3000" rel="noreferrer">Return to Pathfinder →</a>
+    <p class="hint">You can also close this tab and return to the app or terminal.</p>
+  </main>
+</body>
+</html>""".encode()
+
+
 class OAuthLoginError(RuntimeError):
     """A safe-to-display login failure with no upstream secrets."""
 
@@ -122,7 +183,7 @@ async def login_with_browser(
         reader: asyncio.StreamReader, writer: asyncio.StreamWriter
     ) -> None:
         status = "400 Bad Request"
-        message = "Sign-in failed. Return to Pathfinder or your terminal."
+        success = False
         try:
             request_headers = await asyncio.wait_for(reader.readuntil(b"\r\n\r\n"), 5)
             request_line = request_headers.split(b"\r\n", 1)[0].decode("ascii")
@@ -130,10 +191,8 @@ async def login_with_browser(
             parsed = urlsplit(target)
             if method != "GET" or parsed.path != "/callback":
                 status = "404 Not Found"
-                message = "Not found."
             elif callback_code.done():
                 status = "409 Conflict"
-                message = "Sign-in callback already received."
             else:
                 params = parse_qs(parsed.query, keep_blank_values=True)
                 try:
@@ -143,7 +202,7 @@ async def login_with_browser(
                 else:
                     callback_code.set_result(code)
                     status = "200 OK"
-                    message = "Sign-in complete. You may close this tab."
+                    success = True
         except (
             asyncio.IncompleteReadError,
             asyncio.LimitOverrunError,
@@ -153,10 +212,14 @@ async def login_with_browser(
         ):
             pass
         finally:
-            body = message.encode("utf-8")
+            body = _callback_page(success=success)
             writer.write(
-                f"HTTP/1.1 {status}\r\nContent-Type: text/plain; charset=utf-8\r\n"
+                f"HTTP/1.1 {status}\r\nContent-Type: text/html; charset=utf-8\r\n"
                 f"Content-Length: {len(body)}\r\nCache-Control: no-store\r\n"
+                "Referrer-Policy: no-referrer\r\nX-Content-Type-Options: nosniff\r\n"
+                "Content-Security-Policy: default-src 'none'; "
+                "style-src 'unsafe-inline'; "
+                "base-uri 'none'; form-action 'none'; frame-ancestors 'none'\r\n"
                 "Connection: close\r\n\r\n".encode("ascii")
                 + body
             )

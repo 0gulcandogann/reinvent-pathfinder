@@ -1,4 +1,4 @@
-import type { AgentResponse, AttendeeProfile, AttendeeSchedule, BuilderIdStart, BuilderIdStatus, DemoBootstrap, SearchResults } from "./types";
+import type { AgentResponse, AttendeeProfile, AttendeeSchedule, BuilderIdStart, BuilderIdStatus, DemoBootstrap, LiveBootstrap, PathfinderMode, SearchResults } from "./types";
 import type { UiErrorKind } from "./view";
 
 export class ApiError extends Error {
@@ -36,14 +36,16 @@ async function request<T>(path: string, method: "GET" | "POST", body?: object): 
 export const api = {
   builderIdStatus: () => request<BuilderIdStatus>("auth/builder-id/status", "GET"),
   startBuilderIdLogin: () => request<BuilderIdStart>("auth/builder-id/start", "POST"),
+  recheckBuilderIdAccess: () => request<BuilderIdStatus>("auth/builder-id/recheck", "POST"),
+  liveBootstrap: () => request<LiveBootstrap>("live/bootstrap", "POST"),
   demoState: () => request<DemoBootstrap>("demo/state", "GET"),
   resetDemo: () => request<DemoBootstrap>("demo/reset", "POST"),
-  agentMessage: (message: string, conversationId: string, profile?: AttendeeProfile, currentSchedule?: AttendeeSchedule) =>
-    request<AgentResponse>("agent/message", "POST", {
+  agentMessage: (message: string, conversationId: string, profile?: AttendeeProfile, currentSchedule?: AttendeeSchedule, mode: PathfinderMode = "demo") =>
+    request<AgentResponse>(`${mode === "live" ? "live/" : ""}agent/message`, "POST", {
       message, conversation_id: conversationId,
       ...(profile ? { profile } : {}),
       ...(currentSchedule ? { current_schedule: currentSchedule } : {}),
     }),
-  recommend: (query: string, profile: AttendeeProfile, filters: Record<string, string[]>) =>
-    request<SearchResults>("sessions/recommend", "POST", { query, profile, filters, limit: 40 }),
+  recommend: (query: string, profile: AttendeeProfile, filters: Record<string, string[]>, mode: PathfinderMode = "demo") =>
+    request<SearchResults>(`${mode === "live" ? "live/" : ""}sessions/recommend`, "POST", { query, profile, filters, limit: 40 }),
 };
