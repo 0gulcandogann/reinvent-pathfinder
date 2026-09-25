@@ -1,0 +1,16 @@
+{
+  "schedule": {
+    "reserved": ["sec310", "svs320"],
+    "favorites": ["cop330", "fav320", "svst1"],
+    "personalTime": [
+      {
+        "personalTimeId": "personal-tuesday-afternoon",
+        "title": "Partner meeting and break",
+        "description": "Keep Tuesday afternoon free",
+        "startDateTime": "2026-12-01T21:00:00",
+        "endDateTime": "2026-12-02T01:00:00",
+        "location": "Expo hall"
+      }
+    ]
+  }
+}

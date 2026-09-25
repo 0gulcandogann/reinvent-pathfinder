@@ -1,0 +1,18 @@
+{
+  "Serverless Engineer": {
+    "interests": ["serverless", "observability", "event-driven architecture"],
+    "preferred_services": ["AWS Lambda"],
+    "desired_levels": ["300", "400"],
+    "prioritize_depth": true
+  },
+  "Security Engineer": {
+    "interests": ["security", "IAM", "containers"],
+    "desired_levels": ["300", "400"],
+    "prioritize_depth": true
+  },
+  "New AWS User": {
+    "interests": ["architecture fundamentals", "serverless", "databases"],
+    "desired_levels": ["100", "200"],
+    "prioritize_depth": false
+  }
+}

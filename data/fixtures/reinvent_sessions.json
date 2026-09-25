@@ -1,0 +1,99 @@
+[
+  {
+    "sessionId": "svs401",
+    "abbreviation": "SVS401",
+    "title": "Advanced serverless observability with AWS Lambda",
+    "abstract": "Trace event-driven workloads and diagnose production latency.",
+    "type": "Workshop",
+    "level": "400 - Expert",
+    "tracks": ["Compute"],
+    "topics": ["Serverless", "Observability"],
+    "industries": ["Financial Services"],
+    "roles": ["Platform Engineer"],
+    "services": ["AWS Lambda", "Amazon CloudWatch"],
+    "speakers": [{"name": "Avery Chen"}],
+    "sessionTime": {
+      "date": "2026-12-01",
+      "time": "09:00",
+      "length": "120",
+      "timezone": "America/Los_Angeles"
+    },
+    "venue": "The Venetian",
+    "room": "Room 101",
+    "isReservable": true,
+    "seatAvailability": "available"
+  },
+  {
+    "sessionId": "cop310",
+    "abbreviation": "COP310",
+    "title": "Observability at scale",
+    "abstract": "Use advanced serverless monitoring patterns for large systems.",
+    "type": "Chalk talk",
+    "level": "300 - Advanced",
+    "tracks": ["Operations"],
+    "topics": ["Observability"],
+    "roles": ["Site Reliability Engineer"],
+    "services": ["Amazon CloudWatch"],
+    "speakers": [{"name": "Jordan Rivera"}],
+    "sessionTime": {"date": "2026-12-01", "time": "11:00", "length": "60"}
+  },
+  {
+    "sessionId": "svs301",
+    "abbreviation": "SVS301",
+    "title": "AWS Lambda performance tuning",
+    "abstract": "Improve cold starts and advanced serverless performance.",
+    "type": "Breakout session",
+    "level": "300 - Advanced",
+    "tracks": ["Compute"],
+    "topics": ["Serverless", "Performance"],
+    "roles": ["Developer"],
+    "services": ["AWS Lambda"],
+    "speakers": [{"name": "Samir Patel"}]
+  },
+  {
+    "sessionId": "sec330",
+    "abbreviation": "SEC330",
+    "title": "Security architecture for serverless applications",
+    "abstract": "Apply IAM controls to event-driven applications.",
+    "type": "Workshop",
+    "level": "300 - Advanced",
+    "tracks": ["Security"],
+    "topics": ["Security", "Serverless"],
+    "roles": ["Security Engineer"],
+    "services": ["AWS IAM", "AWS Lambda"],
+    "speakers": [{"name": "Morgan Lee"}]
+  },
+  {
+    "sessionId": "con325",
+    "abbreviation": "CON325",
+    "title": "Containers at scale",
+    "abstract": "Operate Kubernetes clusters with Amazon EKS.",
+    "type": "Breakout session",
+    "level": "300 - Advanced",
+    "tracks": ["Containers"],
+    "topics": ["Containers"],
+    "roles": ["Platform Engineer"],
+    "services": ["Amazon EKS"],
+    "speakers": [{"name": "Taylor Kim"}]
+  },
+  {
+    "sessionId": "dat101",
+    "abbreviation": "DAT101",
+    "title": "Data foundations on AWS",
+    "type": "Breakout session",
+    "level": "100 - Foundational"
+  },
+  {
+    "sessionId": "svs101",
+    "abbreviation": "SVS101",
+    "title": "Serverless foundations for new builders",
+    "abstract": "Learn architecture fundamentals with AWS Lambda and build a first event-driven application.",
+    "type": "Breakout session",
+    "level": "100 - Foundational",
+    "tracks": ["Compute"],
+    "topics": ["Serverless", "Architecture"],
+    "roles": ["Developer"],
+    "services": ["AWS Lambda"],
+    "speakers": [{"name": "Alex Morgan"}]
+  }
+]

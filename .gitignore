@@ -1,0 +1,46 @@
+# Environment and credentials
+.env
+.env.*
+!.env.example
+*token*.json
+*credentials*.json
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Node and Next.js
+node_modules/
+.next/
+out/
+coverage/
+*.tsbuildinfo
+
+# Local catalogs and runtime data
+*.sqlite
+*.sqlite3
+*.sqlite3-*
+*.db
+*.db-*
+data/catalog.json
+data/catalog.json.tmp
+
+# Browser captures; curated public images live in docs/assets/
+docs/screenshots/
+playwright-report/
+test-results/
+
+# Editor, OS, and temporary files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.log
+tmp/
+temp/

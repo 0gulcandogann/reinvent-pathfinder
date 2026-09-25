@@ -1,0 +1,122 @@
+[
+  {
+    "sessionId": "plt-m1",
+    "abbreviation": "PLT-M1",
+    "title": "Platform security foundations",
+    "abstract": "Secure serverless foundations for platform teams.",
+    "type": "Breakout session",
+    "level": "300 - Advanced",
+    "services": ["AWS IAM"],
+    "topics": ["Security"],
+    "sessionTime": {"date": "2026-11-30", "time": "09:00", "length": "60", "timezone": "America/Los_Angeles"},
+    "venue": "The Venetian"
+  },
+  {
+    "sessionId": "svs-m2",
+    "abbreviation": "SVS-M2",
+    "title": "Advanced serverless observability",
+    "abstract": "Trace Lambda workloads in production.",
+    "type": "Workshop",
+    "level": "400 - Expert",
+    "services": ["AWS Lambda", "Amazon CloudWatch"],
+    "topics": ["Serverless", "Observability"],
+    "sessionTime": {"date": "2026-11-30", "time": "11:00", "length": "60", "timezone": "America/Los_Angeles"},
+    "venue": "The Venetian"
+  },
+  {
+    "sessionId": "sec-m2",
+    "abbreviation": "SEC-M2",
+    "title": "Security operations for builders",
+    "abstract": "Investigate incidents in distributed systems.",
+    "type": "Workshop",
+    "level": "300 - Advanced",
+    "services": ["AWS IAM"],
+    "topics": ["Security"],
+    "sessionTime": {"date": "2026-11-30", "time": "11:00", "length": "60", "timezone": "America/Los_Angeles"},
+    "venue": "Wynn"
+  },
+  {
+    "sessionId": "evd-m3",
+    "abbreviation": "EVD-M3",
+    "title": "Serverless event-driven architecture",
+    "abstract": "Build reliable workflows with AWS Lambda.",
+    "type": "Breakout session",
+    "level": "300 - Advanced",
+    "services": ["AWS Lambda"],
+    "topics": ["Serverless"],
+    "sessionTime": {"date": "2026-11-30", "time": "13:00", "length": "60", "timezone": "America/Los_Angeles"},
+    "venue": "The Venetian"
+  },
+  {
+    "sessionId": "obs-m4",
+    "abbreviation": "OBS-M4",
+    "title": "Observability operations at scale",
+    "abstract": "Use metrics and traces to understand production systems.",
+    "type": "Breakout session",
+    "level": "300 - Advanced",
+    "services": ["Amazon CloudWatch"],
+    "topics": ["Observability"],
+    "sessionTime": {"date": "2026-11-30", "time": "15:00", "length": "60", "timezone": "America/Los_Angeles"},
+    "venue": "The Venetian"
+  },
+  {
+    "sessionId": "svs-t1",
+    "abbreviation": "SVS-T1",
+    "title": "Serverless performance with AWS Lambda",
+    "abstract": "Diagnose production latency.",
+    "type": "Workshop",
+    "level": "400 - Expert",
+    "services": ["AWS Lambda"],
+    "topics": ["Serverless"],
+    "sessionTime": {"date": "2026-12-01", "time": "09:00", "length": "60", "timezone": "America/Los_Angeles"},
+    "venue": "The Venetian"
+  },
+  {
+    "sessionId": "sec-t2",
+    "abbreviation": "SEC-T2",
+    "title": "Security controls for cloud applications",
+    "abstract": "IAM policies and operational security.",
+    "type": "Breakout session",
+    "level": "300 - Advanced",
+    "services": ["AWS IAM"],
+    "topics": ["Security"],
+    "sessionTime": {"date": "2026-12-01", "time": "11:00", "length": "60", "timezone": "America/Los_Angeles"},
+    "venue": "The Venetian"
+  },
+  {
+    "sessionId": "blk-t3",
+    "abbreviation": "BLK-T3",
+    "title": "Advanced serverless security workshop",
+    "abstract": "Hands-on security for AWS Lambda workloads.",
+    "type": "Workshop",
+    "level": "400 - Expert",
+    "services": ["AWS Lambda", "AWS IAM"],
+    "topics": ["Serverless", "Security"],
+    "sessionTime": {"date": "2026-12-01", "time": "14:00", "length": "60", "timezone": "America/Los_Angeles"},
+    "venue": "Wynn"
+  },
+  {
+    "sessionId": "obs-t4",
+    "abbreviation": "OBS-T4",
+    "title": "Observability for serverless systems",
+    "abstract": "Explore traces and alarms with Amazon CloudWatch.",
+    "type": "Breakout session",
+    "level": "300 - Advanced",
+    "services": ["Amazon CloudWatch"],
+    "topics": ["Observability", "Serverless"],
+    "sessionTime": {"date": "2026-12-01", "time": "17:30", "length": "60", "timezone": "America/Los_Angeles"},
+    "venue": "The Venetian"
+  },
+  {
+    "sessionId": "sec-t4",
+    "abbreviation": "SEC-T4",
+    "title": "Security architecture deep dive",
+    "abstract": "Explore advanced IAM controls.",
+    "type": "Breakout session",
+    "level": "400 - Expert",
+    "services": ["AWS IAM"],
+    "topics": ["Security"],
+    "sessionTime": {"date": "2026-12-01", "time": "17:30", "length": "60", "timezone": "America/Los_Angeles"},
+    "venue": "Wynn"
+  }
+]
